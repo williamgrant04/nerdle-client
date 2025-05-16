@@ -1,6 +1,9 @@
+import GuessForm from "./components/GuessForm/GuessForm"
+
 const App = () => {
   return (
     <>
+      <GuessForm />
     </>
   )
 }
