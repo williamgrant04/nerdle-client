@@ -2,6 +2,7 @@ import { useState } from "react";
 
 const GuessForm = () => {
   const [guess, setGuess] = useState<string>("");
+  const [autocomplete, setAutocomplete] = useState<string[]>([]);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGuess(e.target.value);
