@@ -5,13 +5,18 @@ interface AutocompleteProps {
 }
 
 const Autocomplete = ({ autocomplete, setAutocomplete, setGuess }: AutocompleteProps) => {
+  const clickHandler = (name: string) => {
+    setGuess(name);
+    setAutocomplete([]);
+  }
+
   return (
     <div>
       {
         autocomplete &&
-        autocomplete.map((item) => {
+        autocomplete.map((cardName) => {
           return (
-            <span key={item}>{item}</span>
+            <div key={cardName} onClick={() => clickHandler(cardName)}>{cardName}</div>
           )
         })
       }
