@@ -10,5 +10,15 @@ export const scryfall = {
       console.error(error);
       return []
     }
+  },
+
+  async getCardByName(name: string) {
+    try {
+      const res = await axios.get(`https://api.scryfall.com/cards/named?exact=${name}`)
+      return res.data
+    } catch (error) {
+      console.error(error);
+      return null
+    }
   }
 }
