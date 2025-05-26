@@ -12,7 +12,7 @@ export const scryfall = {
     }
   },
 
-  async getCardByName(name: string) {
+  async getCardByName(name: string): Promise<Card | null> {
     try {
       const res = await axios.get(`https://api.scryfall.com/cards/named?exact=${name}`)
       return res.data
