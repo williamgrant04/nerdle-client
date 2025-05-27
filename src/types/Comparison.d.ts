@@ -6,5 +6,8 @@ interface Comparison {
   subtype: boolean,
   set: boolean,
   released_at: "higher" | "lower" | "same",
-  colors: string[] // This is an array of the colors that match
+  colors: {
+    remaining: boolean,
+    matching: string[] // This is an array of the colors that match
+  }
 }
