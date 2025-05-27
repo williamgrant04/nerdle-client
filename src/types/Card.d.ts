@@ -130,5 +130,7 @@ interface Card {
   toughness: string,
   type_line: string,
   uri: string,
-  variation: boolean
+  variation: boolean,
+
+  set_image?: string // This is not in the Scryfall API
 }

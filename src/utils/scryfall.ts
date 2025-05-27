@@ -20,5 +20,15 @@ export const scryfall = {
       console.error(error);
       return null
     }
+  },
+
+  async getSetImage(set_uri: string): Promise<string | null> {
+    try {
+      const res = await axios.get(set_uri)
+      return res.data.icon_svg_uri || null
+    } catch (error) {
+      console.error(error);
+      return null
+    }
   }
 }

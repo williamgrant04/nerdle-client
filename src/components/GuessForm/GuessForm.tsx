@@ -28,9 +28,10 @@ const GuessForm = () => {
       // Need some form of validation or actual error handling
       const card = await scryfall.getCardByName(guess);
       const compared = await comparison.compare(card);
-      console.log(compared);
-      
-      if (card) setGuesses(prev => [...prev, { guess: card, comparison: compared }]);
+      if (card) {
+        const set_image = await scryfall.getSetImage(card.set_uri) ?? undefined;
+        setGuesses(prev => [...prev, { guess: {...card, set_image }, comparison: compared }]);
+      }
     } catch (error) {
 
     }
