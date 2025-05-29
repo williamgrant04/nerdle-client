@@ -1,0 +1,48 @@
+.guessWrapper {
+  background-color: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.guess {
+  background-color: orangered;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "image mana rarity set colors"
+    "image type type subtype subtype";
+  justify-items: center;
+  align-items: center;
+}
+
+.guessImage {
+  grid-area: image;
+}
+
+.mana {
+  grid-area: mana;
+}
+
+.rarity {
+  grid-area: rarity;
+}
+
+.set {
+  grid-area: set;
+}
+
+.colors {
+  grid-area: colors;
+}
+
+.type {
+  grid-area: type;
+}
+
+.subtype {
+  grid-area: subtype;
+}
