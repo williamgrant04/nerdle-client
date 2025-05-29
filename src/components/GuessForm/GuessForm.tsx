@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { scryfall } from "../../utils/scryfall";
 import Autocomplete from "../Autocomplete/Autocomplete";
 import { comparison } from "../../utils/comparison";
@@ -8,15 +8,18 @@ const GuessForm = () => {
   const [guess, setGuess] = useState<string>("");
   const [autocomplete, setAutocomplete] = useState<{ selected: boolean, values: string[] }>({ selected: false, values: [] });
   const { setGuesses } = useContext(guessContext);
+  const debounceRef = useRef<number | null>(null)
 
-  const changeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGuess(e.target.value);
 
     if (e.target.value.length >= 3) {
-      // ? Add a debounce
-      const values = await scryfall.autocomplete(e.target.value);
-      // If user changes input before submitting, selected should be false
-      setAutocomplete(({ selected: false, values }));
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+
+      debounceRef.current = setTimeout(async () => {
+        const values = await scryfall.autocomplete(e.target.value);
+        setAutocomplete(({ selected: false, values }));
+      }, 500);
     }
   }
 
