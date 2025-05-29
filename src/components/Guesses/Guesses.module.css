@@ -1,26 +1,60 @@
 .guessWrapper {
-  background-color: grey;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   padding: 10px;
+
+  h2 {
+    color: #ddd;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+  }
 }
 
+/* This is some whacky nesting */
 .guess {
-  background-color: orangered;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr 1fr;
   grid-template-areas:
     "image mana rarity set colors"
     "image type type subtype subtype";
-  justify-items: center;
+  justify-items: stretch;
   align-items: center;
+  gap: 10px;
+
+  p {
+    margin: 0;
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  & > div {
+    background-color: #dddddd;
+    padding: 10px;
+    border-radius: 10px;
+
+    div {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      align-items: center;
+
+      p {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: normal;
+      }
+    }
+  }
 }
 
 .guessImage {
   grid-area: image;
+  /* height: 80%; */
 }
 
 .mana {
@@ -29,10 +63,23 @@
 
 .rarity {
   grid-area: rarity;
+
+
 }
 
 .set {
   grid-area: set;
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 50px;
+      height: 50px;
+    }
+  }
 }
 
 .colors {
@@ -45,4 +92,12 @@
 
 .subtype {
   grid-area: subtype;
+}
+
+.correct {
+  background-color: green;
+}
+
+.near {
+  background-color: yellow;
 }

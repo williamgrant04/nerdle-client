@@ -33,18 +33,25 @@ const Guesses = () => {
 
               <div className={ classes.type }>
                 <p>Type</p>
-                <p>{guess.type_line.split(" ")[0]}</p>
+                <div>
+                  <p>{guess.type_line.split(" ")[0]}</p>
+                </div>
               </div>
 
               <div className={ classes.subtype }>
                 <p>Subtype</p>
-                <p>{guess.type_line.split(" ")[2]}</p>
+                <div>
+                  <p>{guess.type_line.split(" ")[2]}</p>
+                </div>
               </div>
 
               <div className={ classes.set }>
-                <img src={guess.set_image}/>
-                <p>{guess.released_at}</p>
-                <Arrow direction={comparison.released_at} />
+                <p>Set</p>
+                <div>
+                  <img src={guess.set_image}/>
+                  <p>{new Date(guess.released_at).getFullYear()}</p>
+                  <Arrow direction={comparison.released_at} />
+                </div>
               </div>
 
               <div className={ classes.colors }>
