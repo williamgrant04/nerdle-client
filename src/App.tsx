@@ -5,7 +5,7 @@ const App = () => {
   return (
     <>
       <GuessForm />
-      <Guesses />
+      <Guesses colorblind={false}/>
     </>
   )
 }

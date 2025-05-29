@@ -18,11 +18,8 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr 1fr;
-  grid-template-areas:
-    "image mana rarity set colors"
-    "image type type subtype subtype";
   justify-items: stretch;
-  align-items: center;
+  align-items: stretch;
   gap: 10px;
 
   p {
@@ -33,7 +30,10 @@
   }
 
   & > div {
-    background-color: #dddddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ddd;
     padding: 10px;
     border-radius: 10px;
 
@@ -53,23 +53,11 @@
 }
 
 .guessImage {
-  grid-area: image;
-  /* height: 80%; */
-}
-
-.mana {
-  grid-area: mana;
-}
-
-.rarity {
-  grid-area: rarity;
-
-
+  grid-row: span 2;
+  align-self: center;
 }
 
 .set {
-  grid-area: set;
-
   div {
     display: flex;
     justify-content: center;
@@ -82,16 +70,26 @@
   }
 }
 
-.colors {
-  grid-area: colors;
+.colorsWrapper {
+  .colors {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    column-gap: 10px;
+    justify-items: center;
+
+    & > :nth-child(3) {
+      position: absolute;
+    }
+  }
 }
 
 .type {
-  grid-area: type;
+  grid-column: span 2;
 }
 
 .subtype {
-  grid-area: subtype;
+  grid-column: span 2;
 }
 
 .correct {
