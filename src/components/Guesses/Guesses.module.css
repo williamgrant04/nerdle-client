@@ -81,6 +81,10 @@
     & > :nth-child(3) {
       position: absolute;
     }
+
+    & > :only-child {
+      grid-column: span 2;
+    }
   }
 }
 
