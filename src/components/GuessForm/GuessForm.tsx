@@ -3,9 +3,11 @@ import { scryfall } from "../../utils/scryfall";
 import Autocomplete from "../Autocomplete/Autocomplete";
 import { comparison } from "../../utils/comparison";
 import guessContext from "../../context/GuessContext";
+import classes from "./GuessForm.module.css";
 
 const GuessForm = () => {
   const [guess, setGuess] = useState<string>("");
+  const [showAutocomplete, setShowAutocomplete] = useState<boolean>(false);
   const [autocomplete, setAutocomplete] = useState<{ selected: boolean, values: string[] }>({ selected: false, values: [] });
   const { setGuesses } = useContext(guessContext);
   const debounceRef = useRef<number | null>(null)
@@ -18,6 +20,7 @@ const GuessForm = () => {
 
       debounceRef.current = setTimeout(async () => {
         const values = await scryfall.autocomplete(e.target.value);
+        setShowAutocomplete(true);
         setAutocomplete(({ selected: false, values }));
       }, 500);
     }
@@ -25,6 +28,7 @@ const GuessForm = () => {
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!autocomplete.selected) return
     setGuess("");
     setAutocomplete(prev => ({ ...prev, selected: false }));
     try {
@@ -40,23 +44,19 @@ const GuessForm = () => {
     }
   }
 
-  // This should be a ternary on the className of the button
-  // because this would need a ref
   useEffect(() => {
-    if (autocomplete.selected) {
-      // Enable the submit button
-    } else {
-      // Disable the submit button
+    if (autocomplete.values.length === 0) {
+      setShowAutocomplete(false);
     }
-  }, [guess])
+  }, [autocomplete]);
 
   return (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={submitHandler} className={`${classes.form} center-children`}>
       <div>
-        <input type="text" onChange={changeHandler} value={guess} placeholder="Guess..." />
-        <Autocomplete autocomplete={autocomplete} setAutocomplete={setAutocomplete} setGuess={setGuess}/>
+        <input type="text" onChange={changeHandler} value={guess} placeholder="Card name..." className={`${classes.guessInput} ${autocomplete.values.length > 0 && classes.autocomplete}`} spellCheck={false}/>
+        { showAutocomplete && <Autocomplete autocomplete={autocomplete} setAutocomplete={setAutocomplete} setGuess={setGuess}/> }
       </div>
-      <input type="submit" value="Guess" />
+      <input type="submit" value="Guess" className={classes.submitGuess}/>
     </form>
   )
 }

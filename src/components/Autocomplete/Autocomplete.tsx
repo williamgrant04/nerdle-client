@@ -1,3 +1,5 @@
+import classes from './Autocomplete.module.css';
+
 interface AutocompleteProps {
   autocomplete: { selected: boolean, values: string[] },
   setAutocomplete: React.Dispatch<React.SetStateAction<{ selected: boolean, values: string[] }>>,
@@ -11,12 +13,12 @@ const Autocomplete = ({ autocomplete, setAutocomplete, setGuess }: AutocompleteP
   }
 
   return (
-    <div>
+    <div className={classes.autocomplete}>
       {
         autocomplete.values &&
         autocomplete.values.map((cardName) => {
           return (
-            <div key={cardName} onClick={() => clickHandler(cardName)}>{cardName}</div>
+            <span key={cardName} onClick={() => clickHandler(cardName)}>{cardName}</span>
           )
         })
       }
