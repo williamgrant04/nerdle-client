@@ -1,14 +1,15 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import guessContext from "../../context/GuessContext";
 import Arrow from "../Arrow/Arrow";
 import classes from "./Guesses.module.css";
 import colors from "./Colors.module.css"
+import { comparison } from "../../utils/comparison";
 
 /*
   This component is disgusting, I need to refactor it (later)
 */
-const Guesses = ({ colorblind }: { colorblind: boolean }) => {
-  const { guesses } = useContext(guessContext);
+const Guesses = ({ colorblind, setWon }: { colorblind: boolean, setWon: React.Dispatch<React.SetStateAction<boolean>> }) => {
+  const { guesses, setGuesses } = useContext(guessContext);
 
   const mapColor = (color: string) => {
     switch (color) {
@@ -26,6 +27,23 @@ const Guesses = ({ colorblind }: { colorblind: boolean }) => {
         return  colors.white;
     }
   }
+
+  useEffect(() => {
+    const storedGuesses = JSON.parse(localStorage.getItem("guesses")!);
+    if (storedGuesses && storedGuesses.length > 0) {
+      setGuesses(storedGuesses);
+    }
+  }, []);
+
+  useEffect(() => {
+    const lastGuess = guesses[guesses.length - 1];
+    if (lastGuess) {
+      if (comparison.checkComparison(lastGuess.comparison))
+        setWon(true);
+      else
+        setWon(false);
+    }
+  }, [guesses])
 
   return (
     <div className="center-children" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>

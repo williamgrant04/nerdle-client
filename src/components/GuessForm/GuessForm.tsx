@@ -5,7 +5,7 @@ import { comparison } from "../../utils/comparison";
 import guessContext from "../../context/GuessContext";
 import classes from "./GuessForm.module.css";
 
-const GuessForm = () => {
+const GuessForm = ({ won }: { won: boolean }) => {
   const [guess, setGuess] = useState<string>("");
   const [showAutocomplete, setShowAutocomplete] = useState<boolean>(false);
   const [autocomplete, setAutocomplete] = useState<{ selected: boolean, values: string[] }>({ selected: false, values: [] });
@@ -13,6 +13,7 @@ const GuessForm = () => {
   const debounceRef = useRef<number | null>(null)
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (won) return;
     setGuess(e.target.value);
 
     if (e.target.value.length >= 3) {
@@ -28,7 +29,7 @@ const GuessForm = () => {
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!autocomplete.selected) return
+    if (won || !autocomplete.selected) return
     setGuess("");
     setAutocomplete(prev => ({ ...prev, selected: false }));
     try {
@@ -36,8 +37,11 @@ const GuessForm = () => {
       const card = await scryfall.getCardByName(guess);
       const compared = await comparison.compare(card);
       if (card) {
-        const set_image = await scryfall.getSetImage(card.set_uri) ?? undefined;
-        setGuesses(prev => [...prev, { guess: {...card, set_image }, comparison: compared }]);
+        setGuesses(prev => {
+          const updated = [...prev, { guess: { ...card }, comparison: compared }]
+          localStorage.setItem("guesses", JSON.stringify(updated));
+          return updated
+        });
       }
     } catch (error) {
 
