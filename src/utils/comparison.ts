@@ -18,7 +18,7 @@ export const comparison = {
   },
 
   checkComparison(comparison: Comparison): boolean {
-    return (comparison.mana === "same" &&
+    return (comparison.mana.hls === "same" &&
       comparison.rarity === "same" &&
       comparison.name &&
       comparison.type &&

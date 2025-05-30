@@ -1,6 +1,9 @@
 interface Comparison {
   name: boolean,
-  mana: "higher" | "lower" | "same",
+  mana: {
+    hls: "higher" | "lower" | "same",
+    diff: boolean
+  },
   rarity: "higher" | "lower" | "same",
   type: boolean,
   subtype: boolean,
