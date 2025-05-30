@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { scryfall } from "../../utils/scryfall";
-import Autocomplete from "../Autocomplete/Autocomplete";
-import { comparison } from "../../utils/comparison";
-import guessContext from "../../context/GuessContext";
+import { scryfall } from "../utils/scryfall";
+import Autocomplete from "./Autocomplete";
+import { comparison } from "../utils/comparison";
+import guessContext from "../context/GuessContext";
 import styled from "styled-components";
 
 const GuessForm = ({ won, lost }: { won: boolean, lost: boolean }) => {

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
-import Guesses from "./components/Guesses/Guesses"
-import GuessForm from "./components/GuessForm/GuessForm"
+import Guesses from "./components/Guesses"
+import GuessForm from "./components/GuessForm"
 import axios from "axios"
 import guessContext from "./context/GuessContext"
 import styled from "styled-components"

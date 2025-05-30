@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
-import guessContext from "../../context/GuessContext";
-import Arrow from "../Arrow/Arrow";
-import { comparison } from "../../utils/comparison";
+import guessContext from "../context/GuessContext";
+import Arrow from "./Arrow";
+import { comparison } from "../utils/comparison";
 import styled from "styled-components";
 
 const Guesses = ({ colorblind, setWon }: { colorblind: boolean, setWon: React.Dispatch<React.SetStateAction<boolean>> }) => {
