@@ -97,9 +97,24 @@
 }
 
 .correct {
-  background-color: green;
+  background-color: #538d4e !important;
 }
 
 .near {
-  background-color: yellow;
+  background-color: #b59f3b !important;
+}
+
+.colorBar {
+  margin-top: 10px;
+  height: 8px;
+  border-radius: 8px;
+  width: 70%;
+  background-color: #bbb;
+  align-self: center;
+  justify-content: flex-start !important;
+
+  & > div {
+    border-radius: 8px;
+    height: 100%;
+  }
 }

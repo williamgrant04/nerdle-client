@@ -11,6 +11,12 @@ import { comparison } from "../../utils/comparison";
 const Guesses = ({ colorblind, setWon }: { colorblind: boolean, setWon: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const { guesses, setGuesses } = useContext(guessContext);
 
+  const correctPercentage = (gColors: string[], cColors: string[]) => {
+    const larger = gColors.length > cColors.length ? gColors : cColors;
+    const smaller = gColors.length > cColors.length ? cColors : gColors;
+    return (smaller.length / larger.length) * 100;
+  }
+
   const mapColor = (color: string) => {
     switch (color) {
       case "W":
@@ -54,15 +60,15 @@ const Guesses = ({ colorblind, setWon }: { colorblind: boolean, setWon: React.Di
             <div className={ classes.guess }>
               <img src={guess.image_uris?.png} height="200" alt={guess.name} className={ classes.guessImage }/>
 
-              <div className={ classes.mana }>
+              <div className={ `${comparison.mana.diff ? classes.near : ""} ${comparison.mana.hls === "same" ? classes.correct : ""}` }>
                 <p>Mana</p>
                 <div>
                   <p>{guess.cmc}</p>
-                  <Arrow direction={comparison.mana}/>
+                  <Arrow direction={comparison.mana.hls}/>
                 </div>
               </div>
 
-              <div className={ classes.rarity }>
+              <div className={ `${comparison.rarity === "same" ? classes.correct : ""}` }>
                 <p>Rarity</p>
                 <div>
                   <p>{guess.rarity}</p>
@@ -70,7 +76,7 @@ const Guesses = ({ colorblind, setWon }: { colorblind: boolean, setWon: React.Di
                 </div>
               </div>
 
-              <div className={ classes.set }>
+              <div className={ `${classes.set} ${(comparison.set && comparison.released_at === "same") && classes.correct} ${(comparison.released_at === "same" && !comparison.set) ? classes.near : ""}` }>
                 <p>Set</p>
                 <div>
                   <img src={guess.set_image}/>
@@ -79,7 +85,7 @@ const Guesses = ({ colorblind, setWon }: { colorblind: boolean, setWon: React.Di
                 </div>
               </div>
 
-              <div className={ classes.colorsWrapper }>
+              <div className={ `${classes.colorsWrapper} ${comparison.colors.all ? classes.correct : ""}` }>
                 <p>Colors</p>
                 <div className={ `${classes.colors} ${colorblind && colors.colorblind}` }>
                   {
@@ -90,18 +96,21 @@ const Guesses = ({ colorblind, setWon }: { colorblind: boolean, setWon: React.Di
                     ))
                   }
                 </div>
-                {/* <p>{`${comparison.colors.remaining}`}</p>
-                <p>comp: {comparison.colors.matching.join(", ")}</p> */}
+                { !comparison.colors.all &&
+                  <div className={ classes.colorBar }>
+                    <div style={{ width: `${correctPercentage(guess.colors, comparison.colors.matching)}%`, backgroundColor: `${correctPercentage(guess.colors, comparison.colors.matching) === 100 ? "#538d4e" : "#b59f3b"}` }}></div>
+                  </div>
+                }
               </div>
 
-              <div className={ classes.type }>
+              <div className={ `${classes.type} ${comparison.type ? classes.correct : ""}` }>
                 <p>Type</p>
                 <div>
                   <p>{guess.type_line.split("—")[0]?.trim() ?? "—"}</p>
                 </div>
               </div>
 
-              <div className={ classes.subtype }>
+              <div className={ `${classes.subtype} ${comparison.subtype ? classes.correct : ""}` }>
                 <p>Subtype</p>
                 <div>
                   <p>{guess.type_line.split("—")[1]?.trim() ?? "—"}</p>
