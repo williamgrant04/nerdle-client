@@ -6,7 +6,8 @@ import guessContext from "./context/GuessContext"
 
 const App = () => {
   const [won, setWon] = useState<boolean>(false)
-  const { setGuesses } = useContext(guessContext)
+  const [lost, setLost] = useState<boolean>(false)
+  const { guesses, setGuesses } = useContext(guessContext)
 
   useEffect(() => {
     const date = localStorage.getItem("date")
@@ -18,6 +19,7 @@ const App = () => {
         localStorage.setItem("guesses", "[]")
         setGuesses([])
         setWon(false)
+        setLost(false)
       })
       .catch((_error) => {})
   }, [])
@@ -30,9 +32,20 @@ const App = () => {
     }
   }, [won])
 
+  useEffect(() => {
+    if ((guesses.length === 20 && !won) || guesses.length > 20) {
+      setLost(true)
+      console.log("Lost")
+    }
+  }, [guesses])
+
   return (
     <>
-      <GuessForm won={won} />
+      <div style={{ width: "100%", height: "25px", display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "1fr" }}>
+        <div style={{ width: `${(guesses.length / 20) * 100}%`, gridArea: "1 / 1 / 1 / 2", height: "100%", backgroundColor: won ? "#9bd3ae" : "#f9aa8f", borderRadius: (guesses.length / 20) * 100 === 100 ? "0" : "0 16px 16px 0", transition: "1s" }}></div>
+        <p style={{ margin: 0, gridArea: "1 / 1 / 1 / 2" }}>{guesses.length}/20</p>
+      </div>
+      <GuessForm won={won} lost={lost} />
       <Guesses colorblind={false} setWon={setWon} />
     </>
   )
