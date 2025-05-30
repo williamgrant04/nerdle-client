@@ -3,7 +3,7 @@ import { scryfall } from "../../utils/scryfall";
 import Autocomplete from "../Autocomplete/Autocomplete";
 import { comparison } from "../../utils/comparison";
 import guessContext from "../../context/GuessContext";
-import classes from "./GuessForm.module.css";
+import styled from "styled-components";
 
 const GuessForm = ({ won, lost }: { won: boolean, lost: boolean }) => {
   const [guess, setGuess] = useState<string>("");
@@ -15,6 +15,9 @@ const GuessForm = ({ won, lost }: { won: boolean, lost: boolean }) => {
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (won || lost) return;
     setGuess(e.target.value);
+    if (e.target.value.length === 0) {
+      setAutocomplete({ selected: false, values: [] });
+    }
 
     if (e.target.value.length >= 3) {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -22,7 +25,7 @@ const GuessForm = ({ won, lost }: { won: boolean, lost: boolean }) => {
       debounceRef.current = setTimeout(async () => {
         const values = await scryfall.autocomplete(e.target.value);
         setShowAutocomplete(true);
-        setAutocomplete(({ selected: false, values }));
+        setAutocomplete({ selected: false, values });
       }, 500);
     }
   }
@@ -55,14 +58,55 @@ const GuessForm = ({ won, lost }: { won: boolean, lost: boolean }) => {
   }, [autocomplete]);
 
   return (
-    <form onSubmit={submitHandler} className={`${classes.form} center-children`}>
+    <Form onSubmit={submitHandler}>
       <div>
-        <input type="text" onChange={changeHandler} value={guess} placeholder="Card name..." className={`${classes.guessInput} ${autocomplete.values.length > 0 && classes.autocomplete}`} spellCheck={false}/>
+        <GuessInput $autocomplete={autocomplete.values.length > 0} type="text" onChange={changeHandler} value={guess} placeholder="Card name..." spellCheck={false}/>
         { showAutocomplete && <Autocomplete autocomplete={autocomplete} setAutocomplete={setAutocomplete} setGuess={setGuess}/> }
       </div>
-      <input type="submit" value="Guess" className={classes.submitGuess}/>
-    </form>
+      <SubmitGuess type="submit" value="Guess"/>
+    </Form>
   )
 }
+
+const Form = styled.form`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+  & > div {
+    position: relative;
+  }
+`
+
+const GuessInput = styled.input<{ $autocomplete: boolean }>`
+  padding: 0.5rem;
+  font-size: 2rem;
+  border: 1px solid #ccc;
+  border-radius: ${({ $autocomplete }) => $autocomplete ? "8px 0 0 0" : "8px 0 0 8px"};
+  transition: border-radius 0.3s;
+
+  &:focus-visible {
+    outline: none;
+  }
+`
+
+const SubmitGuess = styled.input`
+  padding: 0.5rem;
+  font-size: 2rem;
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #45a049;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+`
 
 export default GuessForm;
