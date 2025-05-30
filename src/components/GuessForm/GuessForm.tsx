@@ -72,7 +72,11 @@ const Form = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1rem;
+  margin: 1rem auto;
+  width: fit-content;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px 2px #000;
+
   & > div {
     position: relative;
   }

@@ -72,6 +72,7 @@ const Bar = styled.div<{ $width: number, $won: boolean }>`
   background-color: ${({ $won }) => ($won ? "#9bd3ae" : "#f9aa8f")};
   border-radius: ${({ $width }) => ($width === 100 ? "0" : "0 16px 16px 0")};
   transition: 1s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0);
 `
 
 const Amount = styled.p`
