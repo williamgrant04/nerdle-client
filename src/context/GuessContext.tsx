@@ -1,10 +1,5 @@
 import { createContext, useState } from "react";
 
-interface Guess {
-  guess: Card,
-  comparison: Comparison
-}
-
 // Guesses state will contain an object with the guess and the comparison data
 const guessContext = createContext({
   guesses: [] as Guess[],

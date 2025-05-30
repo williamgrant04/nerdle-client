@@ -15,5 +15,16 @@ export const comparison = {
     })
 
     return response.data
+  },
+
+  checkComparison(comparison: Comparison): boolean {
+    return (comparison.mana === "same" &&
+      comparison.rarity === "same" &&
+      comparison.name &&
+      comparison.type &&
+      comparison.subtype &&
+      comparison.set &&
+      comparison.released_at === "same" &&
+      comparison.colors.all)
   }
 }

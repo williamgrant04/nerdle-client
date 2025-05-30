@@ -7,7 +7,12 @@ interface Comparison {
   set: boolean,
   released_at: "higher" | "lower" | "same",
   colors: {
-    remaining: boolean,
+    all: boolean, // True if all correct
     matching: string[] // This is an array of the colors that match
   }
+}
+
+interface Guess {
+  guess: Card,
+  comparison: Comparison
 }
