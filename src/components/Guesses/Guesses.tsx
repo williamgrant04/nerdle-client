@@ -37,7 +37,7 @@ const Guesses = ({ colorblind, setWon }: { colorblind: boolean, setWon: React.Di
           <GuessWrapper key={guess.id}>
             <h2>{guess.name}</h2>
             <Guess>
-              <GuessImage src={guess.image_uris?.png} height="200" alt={guess.name} />
+              <GuessImage src={guess.image_uris?.png} height="250" alt={guess.name} />
 
               <Segment $near={comparison.mana.diff} $correct={comparison.mana.hls === "same"}>
                 <p>Mana</p>
@@ -116,10 +116,11 @@ const GuessWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   padding: 10px;
+  margin: 10px;
 
   h2 {
     color: #ddd;
-    margin: 0;
+    margin: 0 0 10px 0;
     font-size: 2rem;
     font-weight: bold;
   }
