@@ -1,10 +1,9 @@
 import { useContext, useEffect } from "react";
 import guessContext from "../context/GuessContext";
-import { comparison } from "../utils/comparison";
 import styled from "styled-components";
 import Guess from "./Guess";
 
-const Guesses = ({ colorblind, setWon }: { colorblind: boolean, setWon: React.Dispatch<React.SetStateAction<{ state: boolean, modal: boolean }>> }) => {
+const Guesses = ({ colorblind }: { colorblind: boolean }) => {
   const { guesses, setGuesses } = useContext(guessContext);
 
   useEffect(() => {
@@ -13,16 +12,6 @@ const Guesses = ({ colorblind, setWon }: { colorblind: boolean, setWon: React.Di
       setGuesses(storedGuesses);
     }
   }, []);
-
-  useEffect(() => {
-    const lastGuess = guesses[guesses.length - 1];
-    if (lastGuess) {
-      if (comparison.checkComparison(lastGuess.comparison))
-        setWon({ state: true, modal: true });
-      else
-        setWon({ state: false, modal: false });
-    }
-  }, [guesses])
 
   return (
     <GuessesWrapper>

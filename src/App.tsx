@@ -4,10 +4,14 @@ import GuessForm from "./components/GuessForm"
 import axios from "axios"
 import guessContext from "./context/GuessContext"
 import styled from "styled-components"
+import Guess from "./components/Guess"
+import ReactModal from "react-modal"
+import { comparison } from "./utils/comparison"
 
 const App = () => {
-  const [won, setWon] = useState<boolean>(false)
-  const [lost, setLost] = useState<boolean>(false)
+  ReactModal.setAppElement("#root")
+  const [won, setWon] = useState<{ state: boolean, modal: boolean }>({ state: false, modal: false })
+  const [lost, setLost] = useState<{ state: boolean, modal: boolean, card: Card }>({ state: false, modal: false, card: {} as Card })
   const { guesses, setGuesses } = useContext(guessContext)
 
   useEffect(() => {
@@ -19,35 +23,49 @@ const App = () => {
         localStorage.setItem("date", data.date)
         localStorage.setItem("guesses", "[]")
         setGuesses([])
-        setWon(false)
-        setLost(false)
+        setWon({ state: false, modal: false })
+        setLost({ state: false, modal: false, card: {} as Card })
       })
       .catch((_error) => {})
   }, [])
 
   useEffect(() => {
-    if (won) {
-      console.log("Win flag")
-    } else {
-      console.log("not won")
-    }
-  }, [won])
-
-  useEffect(() => {
-    if ((guesses.length === 20 && !won) || guesses.length > 20) {
-      setLost(true)
-      console.log("Lost")
+    const lastGuess = guesses[guesses.length - 1];
+    if (lastGuess) {
+      if (comparison.checkComparison(lastGuess.comparison)) {
+        setWon({ state: true, modal: true });
+      } else {
+        setWon({ state: false, modal: false });
+        if (guesses.length >= 20) {
+          axios.get("http://localhost:3000/lost").then(({ data }) => {
+            console.log(data);
+            setLost({ state: true, modal: true, card: data })
+          })
+        }
+      }
     }
   }, [guesses])
 
   return (
     <>
       <GuessBar>
-        <Bar $width={(guesses.length/20) * 100} $won={won}/>
+        <Bar $width={(guesses.length/20) * 100} $won={won.state}/>
         <Amount>{guesses.length}/20</Amount>
       </GuessBar>
-      <GuessForm won={won} lost={lost} />
-      <Guesses colorblind={false} setWon={setWon} />
+      <GuessForm won={won.state} lost={lost.state} />
+      <Guesses colorblind={false} />
+
+      <Modal isOpen={won.modal} onRequestClose={() => setWon(prev => ({ ...prev, modal: false }))} style={{ overlay: { backgroundColor: '#000000aa', zIndex: 3 } }}>
+        <h2>You win!</h2>
+        <p>You guessed <strong>{guesses[guesses.length - 1]?.guess.name}</strong> in {guesses.length} tr{guesses.length === 0 || guesses.length > 1 ? "ies" : "y"}.</p>
+        <Guess guess={guesses[guesses.length - 1]?.guess} comparison={guesses[guesses.length - 1]?.comparison} colorblind={false} />
+      </Modal>
+
+      <Modal isOpen={lost.modal} onRequestClose={() => setLost(prev => ({ ...prev, modal: false }))} style={{ overlay: { backgroundColor: '#000000aa', zIndex: 3 } }}>
+        <h2>Too bad!</h2>
+        <p>The card was <strong>{lost.card.name}</strong>.</p>
+        <Guess guess={lost.card} comparison={{}} colorblind={false} />
+      </Modal>
     </>
   )
 }
@@ -82,6 +100,34 @@ const Amount = styled.p`
   font-size: 1.2rem;
   color: white;
   mix-blend-mode: difference;
+`
+
+const Modal = styled(ReactModal)`
+  outline: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #333333;
+  border-radius: 8px;
+  padding: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+
+  & > h2 {
+    color: #ddd;
+    font-size: 3rem;
+    margin: 0;
+  }
+
+  & > p {
+    color: #ddd;
+    font-size: 1.5rem;
+    margin: 20px;
+  }
 `
 
 export default App

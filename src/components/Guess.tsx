@@ -11,13 +11,13 @@ const Guess = ({ guess, comparison, colorblind }: { guess: Card, comparison: Com
 
   return (
     <GuessWrapper>
-      <GuessImage src={guess.image_uris?.png} height="250" alt={guess.name} />
+      <GuessImage src={guess.image_uris ? guess.image_uris?.png : guess.card_image} height="250" alt={guess.name} />
 
-      <Segment $near={comparison.mana.diff} $correct={comparison.mana.hls === "same"}>
+      <Segment $near={comparison.mana?.diff} $correct={comparison.mana?.hls === "same"}>
         <p>Mana</p>
         <div>
           <p>{guess.cmc}</p>
-          <Arrow direction={comparison.mana.hls}/>
+          <Arrow direction={comparison.mana?.hls}/>
         </div>
       </Segment>
 
@@ -38,7 +38,7 @@ const Guess = ({ guess, comparison, colorblind }: { guess: Card, comparison: Com
         </Set>
       </Segment>
 
-      <Segment $correct={comparison.colors.all} data-colors>
+      <Segment $correct={comparison.colors?.all} data-colors>
         <p>Colors</p>
         <Colors $colorblind={colorblind}>
           {
@@ -50,8 +50,8 @@ const Guess = ({ guess, comparison, colorblind }: { guess: Card, comparison: Com
           }
         </Colors>
         {
-          !comparison.colors.all &&
-          <ColorBar $percentage={correctPercentage(guess.colors, comparison.colors.matching)}>
+          comparison.colors && !comparison.colors?.all &&
+          <ColorBar $percentage={correctPercentage(guess.colors, comparison.colors?.matching)}>
             <div></div>
           </ColorBar>
         }

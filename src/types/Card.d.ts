@@ -18,4 +18,5 @@ interface Card {
   set_name: string,
   type_line: string,
   set_image?: string // This is not in the Scryfall API
+  card_image?: string // Only used for when player lost, this is stored in the database
 }
