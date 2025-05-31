@@ -10,7 +10,7 @@ const GuessForm = ({ won, lost }: { won: boolean, lost: boolean }) => {
   const [showAutocomplete, setShowAutocomplete] = useState<boolean>(false);
   const [autocomplete, setAutocomplete] = useState<{ selected: boolean, values: string[] }>({ selected: false, values: [] });
   const { setGuesses } = useContext(guessContext);
-  const debounceRef = useRef<number | null>(null)
+  const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (won || lost) return;
