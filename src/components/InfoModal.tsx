@@ -6,20 +6,21 @@ const InfoModal = ({ open, setOpen }: { open: boolean, setOpen: React.Dispatch<R
   return (
     <Modal isOpen={open} onRequestClose={() => setOpen(false)} style={{ overlay: { backgroundColor: '#000000aa', zIndex: 3 } }}>
       <h1>How to play</h1>
+      <p>The bar at the top of your screen represents the amount of guesses you have left.</p>
       <p>Start by typing the name of a card and selecting it from the autocomplete list.</p>
-      <p>After making a guess if an attribute on the card was correct, the box will be <Color $correct>green</Color></p>
+      <p>After making a guess if an attribute on the card was correct, the box will be <Color $correct>green</Color>.</p>
       <p>There are some special cases though:</p>
       <Cases>
         <Case>
           <h2>Mana</h2>
-          <p>If the mana cost of the card you guessed is within 2 of the target card's mana cost, the box will be <Color $near>yellow</Color></p>
+          <p>If the mana cost of the card you guessed is within 2 of the target card's mana cost, the box will be <Color $near>yellow</Color>.</p>
           <p>Otherwise, the box will be grey.</p>
-          <p>An arrow will display whether the target card is higher or lower than your guess</p>
+          <p>An arrow will display whether the target card is higher or lower than your guess.</p>
         </Case>
         <Case>
           <h2>Colors</h2>
-          <p>If all colors match, the box will be <Color $correct>green</Color></p>
-          <p>If some colors match, a bar will show the percentage of correct colors, if 2/3 colors are correct the bar will be <Color $near>filled</Color> by 66%</p>
+          <p>If all colors match, the box will be <Color $correct>green</Color>.</p>
+          <p>If some colors match, a bar will show the percentage of correct colors, if 2/3 colors are correct the bar will be <Color $near>filled</Color> by 66%.</p>
           <p>If all colors match but the target card has more colors on it, the bar will be <Color $correct>filled</Color> but the box won't be.</p>
         </Case>
       </Cases>
