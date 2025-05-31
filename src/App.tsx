@@ -44,7 +44,7 @@ const App = () => {
         setWon({ state: true, modal: true });
       } else {
         setWon({ state: false, modal: false });
-        if (guesses.length >= 2) {
+        if (guesses.length >= 20) {
           axios.get(`${import.meta.env.VITE_API_URL}/lost`).then(({ data }) => {
             setLost({ state: true, modal: true, card: data })
           })
