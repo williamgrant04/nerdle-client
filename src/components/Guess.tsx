@@ -115,6 +115,7 @@ const GuessWrapper = styled.div`
 
 const GuessImage = styled.img`
   grid-row: span 2;
+  z-index: -1;
   align-self: center;
 
   @media screen and (max-width: 768px) {
