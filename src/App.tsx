@@ -7,9 +7,11 @@ import styled from "styled-components"
 import Guess from "./components/Guess"
 import ReactModal from "react-modal"
 import { comparison } from "./utils/comparison"
+import InfoModal from "./components/InfoModal"
 
 const App = () => {
   ReactModal.setAppElement("#root")
+  const [showInfo, setShowInfo] = useState<boolean>(false)
   const [won, setWon] = useState<{ state: boolean, modal: boolean }>({ state: false, modal: false })
   const [lost, setLost] = useState<{ state: boolean, modal: boolean, card: Card }>({ state: false, modal: false, card: {} as Card })
   const { guesses, setGuesses } = useContext(guessContext)
@@ -27,6 +29,12 @@ const App = () => {
         setLost({ state: false, modal: false, card: {} as Card })
       })
       .catch((_error) => {})
+
+    const first = localStorage.getItem("showInfo");
+    if (!first) {
+      setShowInfo(true);
+      localStorage.setItem("showInfo", "false");
+    }
   }, [])
 
   useEffect(() => {
@@ -36,7 +44,7 @@ const App = () => {
         setWon({ state: true, modal: true });
       } else {
         setWon({ state: false, modal: false });
-        if (guesses.length >= 20) {
+        if (guesses.length >= 2) {
           axios.get("http://localhost:3000/lost").then(({ data }) => {
             console.log(data);
             setLost({ state: true, modal: true, card: data })
@@ -48,8 +56,9 @@ const App = () => {
 
   return (
     <>
+      <InfoModal open={showInfo} setOpen={setShowInfo} />
       <GuessBar>
-        <Bar $width={(guesses.length/20) * 100} $won={won.state}/>
+        <Bar $width={(guesses.length/20) * 100} $won={won.state} />
         <Amount>{guesses.length}/20</Amount>
       </GuessBar>
       <GuessForm won={won.state} lost={lost.state} />
