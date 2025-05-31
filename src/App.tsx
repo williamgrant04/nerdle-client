@@ -56,6 +56,9 @@ const App = () => {
 
   return (
     <>
+      <InfoButton onClick={() => setShowInfo(true)}>
+        <span>i</span>
+      </InfoButton>
       <InfoModal open={showInfo} setOpen={setShowInfo} />
       <GuessBar>
         <Bar $width={(guesses.length/20) * 100} $won={won.state} />
@@ -137,6 +140,30 @@ const Modal = styled(ReactModal)`
     color: #ddd;
     font-size: 1.5rem;
     margin: 20px;
+  }
+`
+
+const InfoButton = styled.button`
+  position: absolute;
+  font-family: monospace;
+  bottom: 15px;
+  right: 15px;
+  background-color: #555;
+  color: #ddd;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 2;
+  transition: background-color 0.3s;
+
+  & > span {
+    font-size: 1.5rem;
+  }
+
+  &:hover {
+    background-color: #777;
   }
 `
 
