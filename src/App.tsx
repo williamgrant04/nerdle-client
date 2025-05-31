@@ -89,7 +89,7 @@ const App = () => {
         <p>The card was <strong>{lost.card.name}</strong>.</p>
         <Guess guess={lost.card} comparison={{}} colorblind={false} />
       </Modal>
-      <Version aria-hidden="true">Version 1.2.5</Version>
+      <Version aria-hidden="true">Version 1.3.5</Version>
     </>
   )
 }
