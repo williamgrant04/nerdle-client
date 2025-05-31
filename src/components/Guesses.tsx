@@ -29,7 +29,7 @@ const Guesses = ({ colorblind }: { colorblind: boolean }) => {
 
 const GuessesWrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 1rem;
 `
 
