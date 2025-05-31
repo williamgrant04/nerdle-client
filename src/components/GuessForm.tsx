@@ -75,22 +75,34 @@ const Form = styled.form`
   margin: 1rem auto;
   width: fit-content;
   border-radius: 8px;
-  box-shadow: 0 2px 4px 2px #000;
+  box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.4);
 
   & > div {
     position: relative;
+  }
+
+  @media screen and (max-width: 550px) {
+    width: 90%;
   }
 `
 
 const GuessInput = styled.input<{ $autocomplete: boolean }>`
   padding: 0.5rem;
   font-size: 2rem;
+  background-color: #eee;
   border: 1px solid #ccc;
+  color: #333;
   border-radius: ${({ $autocomplete }) => $autocomplete ? "8px 0 0 0" : "8px 0 0 8px"};
   transition: border-radius 0.3s;
 
   &:focus-visible {
     outline: none;
+  }
+
+  @media screen and (max-width: 550px) {
+    // So weird?
+    box-sizing: border-box;
+    width: 100%;
   }
 `
 

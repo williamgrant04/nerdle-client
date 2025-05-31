@@ -33,8 +33,10 @@ const Guess = ({ guess, comparison, colorblind }: { guess: Card, comparison: Com
         <p>Set</p>
         <Set>
           <img src={guess.set_image}/>
-          <p>{new Date(guess.released_at).getFullYear()}</p>
-          <Arrow direction={comparison.released_at} />
+          <div>
+            <p>{new Date(guess.released_at).getFullYear()}</p>
+            <Arrow direction={comparison.released_at} />
+          </div>
         </Set>
       </Segment>
 
@@ -81,18 +83,57 @@ const GuessWrapper = styled.div`
   justify-items: stretch;
   align-items: stretch;
   gap: 10px;
+  position: relative;
 
   p {
     margin: 0;
     font-size: 1.5rem;
     text-align: center;
     font-weight: bold;
+
+    @media screen and (max-width: 375px) {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  @media screen and (max-width: 550px) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+
+  @media screen and (max-width: 320px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1.5fr 0.8fr 0.8fr;
+    gap: 6px;
   }
 `
 
 const GuessImage = styled.img`
   grid-row: span 2;
   align-self: center;
+
+  @media screen and (max-width: 768px) {
+    grid-row: span 4;
+    justify-self: end;
+  }
+
+  @media screen and (max-width: 550px) {
+    grid-row: span 2;
+    grid-column: span 3;
+    justify-self: center;
+  }
+
+  @media screen and (max-width: 320px) {
+    grid-row: span 1;
+    width: 125px;
+    height: auto;
+    align-self: end;
+  }
 `
 
 const Segment = styled.div<{ $near?: boolean, $correct?: boolean, $type?: boolean }>`
@@ -103,6 +144,11 @@ const Segment = styled.div<{ $near?: boolean, $correct?: boolean, $type?: boolea
   justify-content: center;
   padding: 10px;
   border-radius: 10px;
+  z-index: -2;
+
+  @media screen and (max-width: 768px) {
+    grid-column: span 1;
+  }
 
   &:not(&[data-colors]) {
     div {
@@ -111,10 +157,18 @@ const Segment = styled.div<{ $near?: boolean, $correct?: boolean, $type?: boolea
       justify-content: center;
       align-items: center;
 
+      @media screen and (max-width: 320px) {
+        gap: 0;
+      }
+
       p {
         margin: 0;
         font-size: 1.25rem;
         font-weight: normal;
+
+        @media screen and (max-width: 375px) {
+          font-size: 1rem;
+        }
       }
     }
   }
@@ -124,12 +178,19 @@ const Set = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
-  border-radius: 10px;
 
   img {
     width: 50px;
     height: 50px;
+  }
+
+  @media screen and (max-width: 420px) {
+    flex-direction: column;
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
   }
 `
 
@@ -148,6 +209,19 @@ const Colors = styled.div<{ $colorblind: boolean }>`
 
   & > :only-child {
     grid-column: span 2;
+  }
+
+  @media screen and (max-width: 768px) and (min-width: 550px) {
+    display: flex;
+    justify-content: center;
+
+    & > :nth-child(3) {
+      position: relative;
+    }
+  }
+
+  @media screen and (max-width: 550px) {
+    column-gap: 15px;
   }
 `
 
@@ -194,6 +268,11 @@ const Color = styled.span<{ $color: string }>`
   margin: 2px;
   border-radius: 50%;
   background-color: ${({ $color }) => mapColor($color)};
+
+  @media screen and (max-width: 320px) {
+    width: 20px;
+    height: 20px;
+  }
 `
 
 export default Guess;

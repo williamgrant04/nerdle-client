@@ -19,6 +19,7 @@ const Arrow = ({ direction }: ArrowProps) => {
 
 const ArrowSvg = styled.svg<{ $lower: boolean }>`
   transform: rotate(${({ $lower }) => $lower ? "180deg" : "0deg"});
+  z-index: -1;
 `
 
 export default Arrow;

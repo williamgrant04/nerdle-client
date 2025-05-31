@@ -67,17 +67,29 @@ const App = () => {
       <Guesses colorblind={false} />
 
       <Modal isOpen={won.modal} onRequestClose={() => setWon(prev => ({ ...prev, modal: false }))} style={{ overlay: { backgroundColor: '#000000aa', zIndex: 3 } }}>
+        <Close onClick={() => setWon(prev => ({ ...prev, modal: false }))} aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ddd" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </Close>
         <h2>You win!</h2>
         <p>You guessed <strong>{guesses[guesses.length - 1]?.guess.name}</strong> in {guesses.length} tr{guesses.length === 0 || guesses.length > 1 ? "ies" : "y"}.</p>
         <Guess guess={guesses[guesses.length - 1]?.guess} comparison={guesses[guesses.length - 1]?.comparison} colorblind={false} />
       </Modal>
 
       <Modal isOpen={lost.modal} onRequestClose={() => setLost(prev => ({ ...prev, modal: false }))} style={{ overlay: { backgroundColor: '#000000aa', zIndex: 3 } }}>
+        <Close onClick={() => setLost(prev => ({ ...prev, modal: false }))} aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ddd" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </Close>
         <h2>Too bad!</h2>
         <p>The card was <strong>{lost.card.name}</strong>.</p>
         <Guess guess={lost.card} comparison={{}} colorblind={false} />
       </Modal>
-      <Version aria-hidden="true">Version 1.1.2</Version>
+      <Version aria-hidden="true">Version 1.2.2</Version>
     </>
   )
 }
@@ -110,7 +122,8 @@ const Amount = styled.p`
   grid-area: 1 / 1 / 1 / 2;
   text-align: center;
   font-size: 1.2rem;
-  color: white;
+  z-index: 2;
+  color: #ddd;
   mix-blend-mode: difference;
 `
 
@@ -119,11 +132,12 @@ const Modal = styled(ReactModal)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   background-color: #333333;
   border-radius: 8px;
   padding: 20px;
   position: absolute;
+  max-height: 90vh;
+  overflow-y: auto;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -136,14 +150,38 @@ const Modal = styled(ReactModal)`
   }
 
   & > p {
+    text-align: center;
     color: #ddd;
     font-size: 1.5rem;
     margin: 20px;
   }
 `
 
-const InfoButton = styled.button`
+const Close = styled.button`
   position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  border: 4px solid #555;
+  background-color: transparent;
+  transition: 0.3s;
+  border-radius: 50%;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    background-color: #555;
+  }
+`
+
+const InfoButton = styled.button`
+  position: fixed;
   font-family: monospace;
   bottom: 15px;
   right: 15px;
@@ -167,7 +205,7 @@ const InfoButton = styled.button`
 `
 
 const Version = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   left: 10px;
   color: #aaa;

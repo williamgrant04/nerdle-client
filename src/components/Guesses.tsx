@@ -40,6 +40,7 @@ const GuessWrapper = styled.div`
   flex-direction: column;
   padding: 10px;
   margin: 10px;
+  /* position: relative; */
 
   h2 {
     color: #ddd;

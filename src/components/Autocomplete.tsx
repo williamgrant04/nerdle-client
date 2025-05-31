@@ -6,6 +6,8 @@ interface AutocompleteProps {
   setGuess: React.Dispatch<React.SetStateAction<string>>
 }
 
+// TODO: Make an "onClickOutside" hook to hide autocomplete when clicking away from it
+// And find a way to reopen it with the same values if the user clicks on the input again
 const Autocomplete = ({ autocomplete, setAutocomplete, setGuess }: AutocompleteProps) => {
   const clickHandler = (name: string) => {
     setGuess(name);
@@ -30,21 +32,24 @@ const AutocompleteWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  background-color: #ccc;
+  background-color: #333;
   width: 100%;
+  height: 350px;
+  overflow-y: auto;
   padding: 10px 0;
-  z-index: 1;
+  /* z-index: 1; */
   border-radius: 0 0 8px 8px;
   font-size: 1.25rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 
   & > span {
     padding: 10px 20px;
     cursor: pointer;
-    color: #333;
-    transition: 0.3s;
+    color: #ddd;
+    transition: background-color 0.3s;
 
     &:hover {
-      background-color: #f0f0f0;
+      background-color: #555;
     }
   }
 `
