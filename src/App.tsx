@@ -18,7 +18,7 @@ const App = () => {
 
   useEffect(() => {
     const date = localStorage.getItem("date")
-    axios.get("http://localhost:3000/date")
+    axios.get(`${import.meta.env.VITE_API_URL}/date`)
       .then(({ data }) => {
         if (!date || date && new Date(data.date).getUTCDate() === new Date(date).getUTCDate()) return;
         console.info("Date change")
@@ -45,8 +45,7 @@ const App = () => {
       } else {
         setWon({ state: false, modal: false });
         if (guesses.length >= 2) {
-          axios.get("http://localhost:3000/lost").then(({ data }) => {
-            console.log(data);
+          axios.get(`${import.meta.env.VITE_API_URL}/lost`).then(({ data }) => {
             setLost({ state: true, modal: true, card: data })
           })
         }
