@@ -2,7 +2,7 @@ import axios from "axios"
 
 export const comparison = {
   async compare(data: any): Promise<Comparison> {
-    const response = await axios.post("http://localhost:3000/compare", {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/compare`, {
       card: {
         name: data.name,
         mana: data.cmc,
