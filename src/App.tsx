@@ -75,6 +75,7 @@ const App = () => {
         <p>The card was <strong>{lost.card.name}</strong>.</p>
         <Guess guess={lost.card} comparison={{}} colorblind={false} />
       </Modal>
+      <Version aria-hidden="true">Version 1.0.0</Version>
     </>
   )
 }
@@ -137,6 +138,17 @@ const Modal = styled(ReactModal)`
     font-size: 1.5rem;
     margin: 20px;
   }
+`
+
+const Version = styled.div`
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #aaa;
+  font-size: 0.8rem;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.5;
 `
 
 export default App
