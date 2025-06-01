@@ -35,7 +35,7 @@ export const comparison = {
     const day = localStorage.getItem("day") || "0";
     if (!guesses || guesses.length === 0) return;
     // ⬛🟨🟩
-    let shareString = `Warpwordle day ${day} ${guesses.length}/20\n\n`;
+    let shareString = `Warpworldle day ${day} ${guesses.length}/20\n\n`;
     guesses.forEach((guess) => {
       const comparison = guess.comparison;
       if (comparison.mana?.hls === "same") {
@@ -98,7 +98,7 @@ export const comparison = {
       shareString += "\n";
     })
 
-    shareString += `\nWarpwordle - ${import.meta.env.VITE_APP_URL}`;
+    shareString += `\n${import.meta.env.VITE_APP_URL}`;
     console.log(shareString)
     navigator.clipboard.writeText(shareString)
   }

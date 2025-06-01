@@ -100,7 +100,7 @@ const App = () => {
         <Guess guess={lost.card} comparison={{}} colorblind={false} />
         <ShareButton onClick={() => comparison.share()}>Share</ShareButton>
       </Modal>
-      <Version aria-hidden="true">Version 1.4.9</Version>
+      <Version aria-hidden="true">Version 1.4.10</Version>
     </>
   )
 }
