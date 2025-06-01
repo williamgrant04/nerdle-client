@@ -22,6 +22,7 @@ const App = () => {
       .then(({ data }) => {
         if (!date) {
           localStorage.setItem("date", data.date);
+          localStorage.setItem("day", data.day);
           localStorage.setItem("guesses", "[]");
           setGuesses([])
           return;
@@ -29,6 +30,7 @@ const App = () => {
         if (date && new Date(data.date).getUTCDate() === new Date(date).getUTCDate()) return;
         console.info("Date change")
         localStorage.setItem("date", data.date)
+        localStorage.setItem("day", data.day);
         localStorage.setItem("guesses", "[]")
         setGuesses([])
         setWon({ state: false, modal: false })
@@ -82,6 +84,7 @@ const App = () => {
         <h2>You win!</h2>
         <p>You guessed <strong>{guesses[guesses.length - 1]?.guess.name}</strong> in {guesses.length} tr{guesses.length === 0 || guesses.length > 1 ? "ies" : "y"}.</p>
         <Guess guess={guesses[guesses.length - 1]?.guess} comparison={guesses[guesses.length - 1]?.comparison} colorblind={false} />
+        <ShareButton onClick={() => comparison.share()}>Share</ShareButton>
       </Modal>
 
       <Modal isOpen={lost.modal} onRequestClose={() => setLost(prev => ({ ...prev, modal: false }))} style={{ overlay: { backgroundColor: '#000000aa', zIndex: 3 } }}>
@@ -94,8 +97,9 @@ const App = () => {
         <h2>Too bad!</h2>
         <p>The card was <strong>{lost.card.name}</strong>.</p>
         <Guess guess={lost.card} comparison={{}} colorblind={false} />
+        <ShareButton onClick={() => comparison.share()}>Share</ShareButton>
       </Modal>
-      <Version aria-hidden="true">Version 1.3.8</Version>
+      <Version aria-hidden="true">Version 1.4.8</Version>
     </>
   )
 }
@@ -219,6 +223,23 @@ const Version = styled.div`
   z-index: 2;
   pointer-events: none;
   opacity: 0.5;
+`
+
+const ShareButton = styled.button`
+  background-color: #555;
+  outline: 0;
+  color: #ddd;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 1.2rem;
+  margin-top: 20px;
+  &:hover {
+    background-color: #777;
+  }
+
 `
 
 export default App
