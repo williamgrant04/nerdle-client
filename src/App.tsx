@@ -18,9 +18,10 @@ const App = () => {
 
   useEffect(() => {
     const date = localStorage.getItem("date")
+    const day = localStorage.getItem("day")
     axios.get(`${import.meta.env.VITE_API_URL}/date`)
       .then(({ data }) => {
-        if (!date) {
+        if (!date || !day) {
           localStorage.setItem("date", data.date);
           localStorage.setItem("day", data.day);
           localStorage.setItem("guesses", "[]");
@@ -99,7 +100,7 @@ const App = () => {
         <Guess guess={lost.card} comparison={{}} colorblind={false} />
         <ShareButton onClick={() => comparison.share()}>Share</ShareButton>
       </Modal>
-      <Version aria-hidden="true">Version 1.4.8</Version>
+      <Version aria-hidden="true">Version 1.4.9</Version>
     </>
   )
 }
