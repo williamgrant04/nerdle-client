@@ -20,7 +20,8 @@ const App = () => {
     const date = localStorage.getItem("date")
     axios.get(`${import.meta.env.VITE_API_URL}/date`)
       .then(({ data }) => {
-        if (!date || date && new Date(data.date).getUTCDate() === new Date(date).getUTCDate()) return;
+        if (!date) { localStorage.setItem("date", data.date); return }
+        if (date && new Date(data.date).getUTCDate() === new Date(date).getUTCDate()) return;
         console.info("Date change")
         localStorage.setItem("date", data.date)
         localStorage.setItem("guesses", "[]")
