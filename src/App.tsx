@@ -20,7 +20,7 @@ const App = () => {
     const date = localStorage.getItem("date")
     axios.get(`${import.meta.env.VITE_API_URL}/date`)
       .then(({ data }) => {
-        if (!date) { localStorage.setItem("date", data.date); return }
+        if (!date) { localStorage.setItem("date", data.date); localStorage.setItem("guesses", "[]"); return; }
         if (date && new Date(data.date).getUTCDate() === new Date(date).getUTCDate()) return;
         console.info("Date change")
         localStorage.setItem("date", data.date)
@@ -90,7 +90,7 @@ const App = () => {
         <p>The card was <strong>{lost.card.name}</strong>.</p>
         <Guess guess={lost.card} comparison={{}} colorblind={false} />
       </Modal>
-      <Version aria-hidden="true">Version 1.3.5</Version>
+      <Version aria-hidden="true">Version 1.3.7</Version>
     </>
   )
 }
