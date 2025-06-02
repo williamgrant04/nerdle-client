@@ -8,6 +8,7 @@ import Guess from "./components/Guess"
 import ReactModal from "react-modal"
 import { comparison } from "./utils/comparison"
 import InfoModal from "./components/InfoModal"
+import SetList from "./components/SetList"
 
 const App = () => {
   ReactModal.setAppElement("#root")
@@ -72,6 +73,7 @@ const App = () => {
         <Bar $width={(guesses.length/20) * 100} $won={won.state} />
         <Amount>{guesses.length}/20</Amount>
       </GuessBar>
+      <SetList />
       <GuessForm won={won.state} lost={lost.state} />
       <Guesses colorblind={false} />
 
@@ -100,7 +102,7 @@ const App = () => {
         <Guess guess={lost.card} comparison={{}} colorblind={false} />
         <ShareButton onClick={() => comparison.share()}>Share</ShareButton>
       </Modal>
-      <Version aria-hidden="true">Version 1.4.10</Version>
+      <Version aria-hidden="true">Version 1.5.10</Version>
     </>
   )
 }
