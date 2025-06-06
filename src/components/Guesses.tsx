@@ -2,9 +2,11 @@ import { useContext, useEffect } from "react";
 import guessContext from "../context/GuessContext";
 import styled from "styled-components";
 import Guess from "./Guess";
+import settingsContext from "../context/SettingsContext";
 
-const Guesses = ({ colorblind }: { colorblind: boolean }) => {
+const Guesses = () => {
   const { guesses, setGuesses } = useContext(guessContext);
+  const { colorblind } = useContext(settingsContext);
 
   useEffect(() => {
     const storedGuesses = JSON.parse(localStorage.getItem("guesses")!);
@@ -40,7 +42,6 @@ const GuessWrapper = styled.div`
   flex-direction: column;
   padding: 10px;
   margin: 10px;
-  /* position: relative; */
 
   h2 {
     color: #ddd;
