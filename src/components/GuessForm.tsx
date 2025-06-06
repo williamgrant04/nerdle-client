@@ -4,16 +4,19 @@ import Autocomplete from "./Autocomplete";
 import { comparison } from "../utils/comparison";
 import guessContext from "../context/GuessContext";
 import styled from "styled-components";
+import settingsContext from "../context/SettingsContext";
 
 const GuessForm = ({ won, lost }: { won: boolean, lost: boolean }) => {
   const [guess, setGuess] = useState<string>("");
   const [showAutocomplete, setShowAutocomplete] = useState<boolean>(false);
   const [autocomplete, setAutocomplete] = useState<{ selected: boolean, values: string[] }>({ selected: false, values: [] });
-  const { setGuesses } = useContext(guessContext);
+  const { setGuesses, setEndlessGuesses } = useContext(guessContext);
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
+  const { endless } = useContext(settingsContext)
+  const { endlessCard } = useContext(guessContext);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (won || lost) return;
+    if (!endless && (won || lost)) return;
     setGuess(e.target.value);
     if (e.target.value.length === 0) {
       setAutocomplete({ selected: false, values: [] });
@@ -32,19 +35,25 @@ const GuessForm = ({ won, lost }: { won: boolean, lost: boolean }) => {
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (won || lost || !autocomplete.selected) return
+    if ((!endless && (won || lost)) || !autocomplete.selected) return
     setGuess("");
     setAutocomplete(prev => ({ ...prev, selected: false }));
     try {
       // Need some form of validation or actual error handling
       const card = await scryfall.getCardByName(guess);
-      const compared = await comparison.compare(card);
       if (card) {
-        setGuesses(prev => {
-          const updated = [...prev, { guess: { ...card }, comparison: compared }]
-          localStorage.setItem("guesses", JSON.stringify(updated));
-          return updated
-        });
+        if (endless) {
+          const compared = comparison.endlessCompare(card, endlessCard);
+          setEndlessGuesses(prev => [...prev, { guess: { ...card }, comparison: compared }])
+        } else {
+          const compared = await comparison.compare(card);
+          setGuesses(prev => {
+            const updated = [...prev, { guess: { ...card }, comparison: compared }]
+            localStorage.setItem("guesses", JSON.stringify(updated));
+            return updated
+          });
+        }
+
       }
     } catch (error) {
 

@@ -8,6 +8,7 @@ interface AutocompleteProps {
 
 // TODO: Make an "onClickOutside" hook to hide autocomplete when clicking away from it
 // And find a way to reopen it with the same values if the user clicks on the input again
+// TODO: Make the wrapper shrink if there aren't enough values to fill the height
 const Autocomplete = ({ autocomplete, setAutocomplete, setGuess }: AutocompleteProps) => {
   const clickHandler = (name: string) => {
     setGuess(name);
@@ -37,7 +38,7 @@ const AutocompleteWrapper = styled.div`
   height: 350px;
   overflow-y: auto;
   padding: 10px 0;
-  /* z-index: 1; */
+  z-index: 1;
   border-radius: 0 0 8px 8px;
   font-size: 1.25rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);

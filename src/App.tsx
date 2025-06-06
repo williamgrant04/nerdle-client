@@ -13,13 +13,14 @@ import SetList from "./components/SetList"
 import WinLossModal from "./components/WinLossModal"
 import SettingsModal from "./components/SettingsModal"
 import settingsContext from "./context/SettingsContext"
+import { scryfall } from "./utils/scryfall"
 
 const App = () => {
   const [won, setWon] = useState<{ state: boolean, modal: boolean }>({ state: false, modal: false })
-  const [lost, setLost] = useState<{ state: boolean, modal: boolean, card: Card }>({ state: false, modal: false, card: {} as Card })
+  const [lost, setLost] = useState<{ state: boolean, modal: boolean, card: Card | null }>({ state: false, modal: false, card: null })
   const [showInfo, setShowInfo] = useState<boolean>(false)
-  const { guesses, setGuesses } = useContext(guessContext)
-  const { setShowModal } = useContext(settingsContext)
+  const { guesses, setGuesses, endlessGuesses, endlessCard, setEndlessCard } = useContext(guessContext)
+  const { setShowModal, endless } = useContext(settingsContext)
 
   useEffect(() => {
     const date = localStorage.getItem("date")
@@ -58,7 +59,7 @@ const App = () => {
         setWon({ state: true, modal: true });
       } else {
         setWon({ state: false, modal: false });
-        if (guesses.length >= 2) {
+        if (guesses.length >= 20) {
           axios.get(`${import.meta.env.VITE_API_URL}/lost`).then(({ data }) => {
             setLost({ state: true, modal: true, card: data })
           })
@@ -66,6 +67,29 @@ const App = () => {
       }
     }
   }, [guesses])
+
+  useEffect(() => {
+    setLost(prev => ({ ...prev, card: null }));
+    const lastGuess = endlessGuesses[endlessGuesses.length - 1];
+    if (lastGuess) {
+        if (comparison.checkComparison(lastGuess.comparison)) {
+        setWon({ state: true, modal: true });
+        scryfall.getRandomCard().then((card) => {
+          if (!card) return;
+          setEndlessCard(card);
+        })
+      } else {
+        setWon({ state: false, modal: false });
+        if (endlessGuesses.length >= 20) {
+          setLost({ state: true, modal: true, card: endlessCard })
+          scryfall.getRandomCard().then((card) => {
+            if (!card) return;
+            setEndlessCard(card);
+          })
+        }
+      }
+    }
+  }, [endlessGuesses])
 
   const handleWinLossModal = () => {
     if (won.modal) {
@@ -102,6 +126,7 @@ const App = () => {
         </ActionButton>
       </Actions>
 
+      { endless && <EndlessNotifier>Endless mode</EndlessNotifier>}
       <Version aria-hidden="true">Version 1.5.10</Version>
     </>
   )
@@ -176,6 +201,14 @@ const ActionButton = styled.button`
   &:hover {
     background-color: #777;
   }
+`
+
+const EndlessNotifier = styled.span`
+  position: fixed;
+  bottom: 10px;
+  right: 50%;
+  transform: translateX(50%);
+  color: #ddd;
 `
 
 const Version = styled.div`

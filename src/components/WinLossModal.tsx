@@ -4,32 +4,45 @@ import Modal from "./UI/Modal";
 import guessContext from "../context/GuessContext";
 import { comparison } from "../utils/comparison";
 import styled from "styled-components";
+import settingsContext from "../context/SettingsContext";
 
 interface WinLossProps {
   open: boolean,
   setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-  lossCard?: Card
+  lossCard: Card | null
 }
 
 // lossCard
 const WinLossModal = ({ open, setOpen, lossCard }: WinLossProps) => {
-  const { guesses } = useContext(guessContext);
+  const { guesses, endlessGuesses, setEndlessGuesses } = useContext(guessContext);
+  const { colorblind, endless } = useContext(settingsContext);
 
   return (
-    <Modal open={open} setOpen={setOpen}>
+    <Modal open={open} setOpen={setOpen} onAfterClose={() => {
+      if (endless) {
+        setEndlessGuesses([]);
+      }
+    }}>
       <h2>{lossCard ? "Too bad!" : "You win!"}</h2>
       { lossCard ? (
         <>
           <p>The card was <strong>{lossCard.name}</strong>.</p>
-          <Guess guess={lossCard} comparison={{}} colorblind={false} />
+          <Guess guess={lossCard} comparison={{}} colorblind={colorblind} />
         </>
       ) : (
-        <>
-          <p>You guessed <strong>{guesses[guesses.length - 1]?.guess.name}</strong> in {guesses.length} tr{guesses.length === 0 || guesses.length > 1 ? "ies" : "y"}.</p>
-          <Guess guess={guesses[guesses.length - 1]?.guess} comparison={guesses[guesses.length - 1]?.comparison} colorblind={false} />
-        </>
+        endless ? (
+          <>
+            <p>You guessed <strong>{endlessGuesses[endlessGuesses.length - 1]?.guess.name}</strong> in {endlessGuesses.length} tr{endlessGuesses.length === 0 || endlessGuesses.length > 1 ? "ies" : "y"}.</p>
+            <Guess guess={endlessGuesses[endlessGuesses.length - 1]?.guess} comparison={endlessGuesses[endlessGuesses.length - 1]?.comparison} colorblind={colorblind} />
+          </>
+        ) : (
+          <>
+            <p>You guessed <strong>{guesses[guesses.length - 1]?.guess.name}</strong> in {guesses.length} tr{guesses.length === 0 || guesses.length > 1 ? "ies" : "y"}.</p>
+            <Guess guess={guesses[guesses.length - 1]?.guess} comparison={guesses[guesses.length - 1]?.comparison} colorblind={colorblind} />
+          </>
+        )
       )}
-      <ShareButton onClick={() => comparison.share()}>Share</ShareButton>
+      { !endless && <ShareButton onClick={() => comparison.share()}>Share</ShareButton> }
     </Modal>
   )
 }

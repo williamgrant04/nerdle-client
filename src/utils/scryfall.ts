@@ -41,5 +41,26 @@ export const scryfall = {
       console.error(error);
       return undefined
     }
+  },
+
+  async getRandomCard(): Promise<Card | null> {
+    try {
+      const res = await axios.get("https://api.scryfall.com/cards/random?q=is%3Afirstprinting")
+      return {
+        cmc: res.data.cmc,
+        id: res.data.id,
+        name: res.data.name,
+        set_name: res.data.set_name,
+        colors: res.data.colors,
+        rarity: res.data.rarity,
+        image_uris: res.data.image_uris,
+        type_line: res.data.type_line,
+        released_at: res.data.released_at,
+        set_image: res.data.set_uri ? await this.getSetImage(res.data.set_uri) : undefined
+      }
+    } catch (error) {
+      console.error(error);
+      return null
+    }
   }
 }

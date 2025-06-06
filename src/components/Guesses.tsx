@@ -5,8 +5,8 @@ import Guess from "./Guess";
 import settingsContext from "../context/SettingsContext";
 
 const Guesses = () => {
-  const { guesses, setGuesses } = useContext(guessContext);
-  const { colorblind } = useContext(settingsContext);
+  const { guesses, setGuesses, endlessGuesses } = useContext(guessContext);
+  const { colorblind, endless } = useContext(settingsContext);
 
   useEffect(() => {
     const storedGuesses = JSON.parse(localStorage.getItem("guesses")!);
@@ -17,8 +17,17 @@ const Guesses = () => {
 
   return (
     <GuessesWrapper>
-      {
+      { !endless &&
         guesses.map(({ guess, comparison }) => (
+          <GuessWrapper key={guess.id}>
+            <h2>{guess.name}</h2>
+            <Guess guess={guess} comparison={comparison} colorblind={colorblind} />
+          </GuessWrapper>
+        ))
+      }
+
+      { endless &&
+        endlessGuesses.map(({ guess, comparison }) => (
           <GuessWrapper key={guess.id}>
             <h2>{guess.name}</h2>
             <Guess guess={guess} comparison={comparison} colorblind={colorblind} />

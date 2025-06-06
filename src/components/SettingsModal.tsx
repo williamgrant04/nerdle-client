@@ -3,9 +3,12 @@ import Modal from "./UI/Modal";
 import settingsContext from "../context/SettingsContext";
 import ToggleSwitch from "./UI/ToggleSwitch";
 import styled from "styled-components";
+import guessContext from "../context/GuessContext";
+import { scryfall } from "../utils/scryfall";
 
 const SettingsModal = () => {
   const settings = useContext(settingsContext);
+  const { setEndlessCard } = useContext(guessContext)
 
   return (
     <Modal open={settings.showModal} setOpen={settings.setShowModal}>
@@ -31,7 +34,16 @@ const SettingsModal = () => {
           <h2>Endless</h2>
           <ToggleSwitch
             toggled={settings.endless}
-            onToggle={() => settings.setEndless(prev => !prev)}
+            onToggle={(checked) => {
+              settings.setEndless(prev => !prev)
+              if (checked) {
+                scryfall.getRandomCard().then(card => {
+                  if (card) {
+                    setEndlessCard(card);
+                  }
+                })
+              }
+            }}
           />
         </div>
         <p>

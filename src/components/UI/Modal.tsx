@@ -4,14 +4,15 @@ import styled from "styled-components"
 interface ModalProps {
   open: boolean,
   setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  onAfterClose?: () => void,
   children: React.ReactNode
 }
 
-const Modal = ({ open, setOpen, children }: ModalProps) => {
+const Modal = ({ open, setOpen, onAfterClose, children }: ModalProps) => {
   ReactModal.setAppElement("#root");
 
   return (
-    <Wrapper isOpen={open} onRequestClose={() => setOpen(false)} style={{ overlay: { backgroundColor: '#000000aa', zIndex: 3 } }}>
+    <Wrapper isOpen={open} onRequestClose={() => setOpen(false)} style={{ overlay: { backgroundColor: '#000000aa', zIndex: 3 } }} onAfterClose={onAfterClose}>
       <Close onClick={() => setOpen(false)} aria-label="Close">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ddd" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>

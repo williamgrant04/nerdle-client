@@ -17,6 +17,19 @@ export const comparison = {
     return response.data
   },
 
+  endlessCompare(guessedCard: Card, compareCard: Card): Comparison {
+    return {
+      name: guessedCard.name === compareCard.name,
+      mana: compareMana(guessedCard, compareCard),
+      rarity: compareRarity(guessedCard, compareCard),
+      type: guessedCard.type_line?.split("—")[0].trim() === compareCard.type_line?.split("—")[0].trim(),
+      subtype: guessedCard.type_line?.split("—")[1]?.trim() === compareCard.type_line?.split("—")[1]?.trim(),
+      set: guessedCard.set_name === compareCard.set_name,
+      released_at: compareRelease(guessedCard, compareCard),
+      colors: compareColors(guessedCard, compareCard)
+    }
+  },
+
   checkComparison(comparison: Comparison): boolean {
     return (
       comparison.mana!.hls === "same" &&
@@ -101,5 +114,91 @@ export const comparison = {
     shareString += `\n${import.meta.env.VITE_APP_URL}`;
     console.log(shareString)
     navigator.clipboard.writeText(shareString)
+  }
+}
+
+const compareRarity = (guess: Card, comparison: Card) => {
+  let guessRarity = 1
+  let comparisonRarity = 1
+  switch (guess.rarity) {
+    case "common":
+      guessRarity = 1;
+      break;
+    case "uncommon":
+      guessRarity = 2;
+      break;
+    case "rare":
+      guessRarity = 3;
+      break;
+    case "mythic":
+      guessRarity = 4;
+      break;
+    default:
+      guessRarity = 1;
+  }
+  switch (comparison.rarity) {
+    case "common":
+      comparisonRarity = 1;
+      break;
+    case "uncommon":
+      comparisonRarity = 2;
+      break;
+    case "rare":
+      comparisonRarity = 3;
+      break;
+    case "mythic":
+      comparisonRarity = 4;
+      break;
+    default:
+      comparisonRarity = 1;
+  }
+
+  if (guessRarity > comparisonRarity) {
+    return "lower";
+  }
+
+  if (guessRarity < comparisonRarity) {
+    return "higher";
+  }
+
+  return "same";
+}
+
+const compareMana = (guess: Card, comparison: Card) => {
+  let hls: "same" | "higher" | "lower" = "same"
+  let diff = false
+
+  if (guess.cmc > comparison.cmc) {
+    hls = "lower"
+  }
+
+  if (guess.cmc < comparison.cmc) {
+    hls = "higher"
+  }
+
+  if (hls === "higher") {
+    diff = guess.cmc - comparison.cmc <= 2;
+  } else if (hls === "lower") {
+    diff = comparison.cmc - guess.cmc <= 2;
+  }
+  return { hls, diff }
+}
+
+const compareRelease = (guess: Card, comparison: Card) => {
+  const guessDate = new Date(guess.released_at);
+  const comparisonDate = new Date(comparison.released_at);
+  if (guessDate > comparisonDate) {
+    return "lower";
+  }
+  if (guessDate < comparisonDate) {
+    return "higher";
+  }
+  return "same";
+}
+
+const compareColors = (guess: Card, comparison: Card) => {
+  return {
+    all: guess.colors.length === comparison.colors.length && guess.colors.every((color) => comparison.colors.includes(color)),
+    matching: guess.colors.filter((color) => comparison.colors.includes(color)),
   }
 }
