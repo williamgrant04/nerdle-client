@@ -127,7 +127,7 @@ const App = () => {
       </Actions>
 
       { endless && <EndlessNotifier>Endless mode</EndlessNotifier>}
-      <Version aria-hidden="true">Version 1.5.10</Version>
+      <Version aria-hidden="true">Version 1.6.11</Version>
     </>
   )
 }
