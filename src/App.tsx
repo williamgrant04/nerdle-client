@@ -35,7 +35,6 @@ const App = () => {
           return;
         }
         if (date && new Date(data.date).getUTCDate() === new Date(date).getUTCDate()) return;
-        console.info("Date change")
         localStorage.setItem("date", data.date)
         localStorage.setItem("day", data.day);
         localStorage.setItem("guesses", "[]")
@@ -127,7 +126,7 @@ const App = () => {
       </Actions>
 
       { endless && <EndlessNotifier>Endless mode</EndlessNotifier>}
-      <Version aria-hidden="true">Version 1.6.11</Version>
+      <Version aria-hidden="true">Version 1.6.12</Version>
     </>
   )
 }
