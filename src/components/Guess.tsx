@@ -146,6 +146,7 @@ const Segment = styled.div<{ $near?: boolean, $correct?: boolean, $type?: boolea
   padding: 10px;
   border-radius: 10px;
   z-index: -2;
+  color: #333;
 
   @media screen and (max-width: 768px) {
     grid-column: span 1;

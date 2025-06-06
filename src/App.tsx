@@ -1,21 +1,23 @@
+// Libraries
 import { useContext, useEffect, useState } from "react"
+import styled from "styled-components"
+import axios from "axios"
+// Utils
+import { comparison } from "./utils/comparison"
+// Components
 import Guesses from "./components/Guesses"
 import GuessForm from "./components/GuessForm"
-import axios from "axios"
 import guessContext from "./context/GuessContext"
-import styled from "styled-components"
-import Guess from "./components/Guess"
-import ReactModal from "react-modal"
-import { comparison } from "./utils/comparison"
 import InfoModal from "./components/InfoModal"
 import SetList from "./components/SetList"
+import WinLossModal from "./components/WinLossModal"
 
 const App = () => {
-  ReactModal.setAppElement("#root")
   const [showInfo, setShowInfo] = useState<boolean>(false)
   const [won, setWon] = useState<{ state: boolean, modal: boolean }>({ state: false, modal: false })
   const [lost, setLost] = useState<{ state: boolean, modal: boolean, card: Card }>({ state: false, modal: false, card: {} as Card })
   const { guesses, setGuesses } = useContext(guessContext)
+  const [colorblind, setColorblind] = useState<boolean>(localStorage.getItem("colorblind") === "true" || false)
 
   useEffect(() => {
     const date = localStorage.getItem("date")
@@ -54,7 +56,7 @@ const App = () => {
         setWon({ state: true, modal: true });
       } else {
         setWon({ state: false, modal: false });
-        if (guesses.length >= 20) {
+        if (guesses.length >= 2) {
           axios.get(`${import.meta.env.VITE_API_URL}/lost`).then(({ data }) => {
             setLost({ state: true, modal: true, card: data })
           })
@@ -63,45 +65,30 @@ const App = () => {
     }
   }, [guesses])
 
+  const handleWinLossModal = () => {
+    if (won.modal) {
+      setWon(prev => ({ ...prev, modal: false }));
+    } else if (lost.modal) {
+      setLost(prev => ({ ...prev, modal: false }));
+    }
+  }
+
   return (
     <>
-      <InfoButton onClick={() => setShowInfo(true)}>
-        <span>i</span>
-      </InfoButton>
-      <InfoModal open={showInfo} setOpen={setShowInfo} />
       <GuessBar>
         <Bar $width={(guesses.length/20) * 100} $won={won.state} />
         <Amount>{guesses.length}/20</Amount>
       </GuessBar>
       <SetList />
       <GuessForm won={won.state} lost={lost.state} />
-      <Guesses colorblind={false} />
+      <Guesses colorblind={colorblind} />
 
-      <Modal isOpen={won.modal} onRequestClose={() => setWon(prev => ({ ...prev, modal: false }))} style={{ overlay: { backgroundColor: '#000000aa', zIndex: 3 } }}>
-        <Close onClick={() => setWon(prev => ({ ...prev, modal: false }))} aria-label="Close">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ddd" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </Close>
-        <h2>You win!</h2>
-        <p>You guessed <strong>{guesses[guesses.length - 1]?.guess.name}</strong> in {guesses.length} tr{guesses.length === 0 || guesses.length > 1 ? "ies" : "y"}.</p>
-        <Guess guess={guesses[guesses.length - 1]?.guess} comparison={guesses[guesses.length - 1]?.comparison} colorblind={false} />
-        <ShareButton onClick={() => comparison.share()}>Share</ShareButton>
-      </Modal>
+      <WinLossModal open={ won.modal || lost.modal } setOpen={handleWinLossModal} lossCard={lost.card} />
 
-      <Modal isOpen={lost.modal} onRequestClose={() => setLost(prev => ({ ...prev, modal: false }))} style={{ overlay: { backgroundColor: '#000000aa', zIndex: 3 } }}>
-        <Close onClick={() => setLost(prev => ({ ...prev, modal: false }))} aria-label="Close">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ddd" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </Close>
-        <h2>Too bad!</h2>
-        <p>The card was <strong>{lost.card.name}</strong>.</p>
-        <Guess guess={lost.card} comparison={{}} colorblind={false} />
-        <ShareButton onClick={() => comparison.share()}>Share</ShareButton>
-      </Modal>
+      <InfoModal open={showInfo} setOpen={setShowInfo} />
+      <InfoButton onClick={() => setShowInfo(true)}>
+        <span>i</span>
+      </InfoButton>
       <Version aria-hidden="true">Version 1.5.10</Version>
     </>
   )
@@ -140,59 +127,6 @@ const Amount = styled.p`
   mix-blend-mode: difference;
 `
 
-const Modal = styled(ReactModal)`
-  outline: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #333333;
-  border-radius: 8px;
-  padding: 20px;
-  position: absolute;
-  max-height: 90vh;
-  overflow-y: auto;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-
-  & > h2 {
-    color: #ddd;
-    font-size: 3rem;
-    margin: 0;
-  }
-
-  & > p {
-    text-align: center;
-    color: #ddd;
-    font-size: 1.5rem;
-    margin: 20px;
-  }
-`
-
-const Close = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  border: 4px solid #555;
-  background-color: transparent;
-  transition: 0.3s;
-  border-radius: 50%;
-
-  svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  &:hover {
-    transform: scale(1.1);
-    background-color: #555;
-  }
-`
-
 const InfoButton = styled.button`
   position: fixed;
   font-family: monospace;
@@ -226,23 +160,6 @@ const Version = styled.div`
   z-index: 2;
   pointer-events: none;
   opacity: 0.5;
-`
-
-const ShareButton = styled.button`
-  background-color: #555;
-  outline: 0;
-  color: #ddd;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-size: 1.2rem;
-  margin-top: 20px;
-  &:hover {
-    background-color: #777;
-  }
-
 `
 
 export default App
